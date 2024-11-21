@@ -85,21 +85,34 @@ def save_full_output_to_gcs(image_path, details):
     print(f"Saved full output to {text_filename} in Google Cloud Storage.")
 
 def parse_output_from_gcs(filename):
-    from google.cloud import storage
-    # Constructing the text file name
-    text_filename = f"{filename.rsplit('.', 1)[0]}.txt"
-    client = storage.Client()
-    bucket = client.bucket('bucksfrbucks')
-    blob = bucket.blob(text_filename)
+    """Fetches the caption and description from the .txt file in the bucket."""
+    text_filename = f"{filename.rsplit('.', 1)[0]}.txt"  # Replace image extension with .txt
+    print(f"[INFO] Looking for .txt file: {text_filename}")
+
     try:
+        # Download the .txt file from GCS
+        blob = storage_client.bucket(BUCKET_NAME).blob(text_filename)
+        if not blob.exists():
+            print(f"[ERROR] .txt file not found for image: {filename}")
+            return "Default Caption", "Default Description"
+
         content = blob.download_as_text()
-        # Parsing JSON content
+        print(f"[INFO] Retrieved .txt file content for {filename}: {content}")
+
+        # Parse JSON content
         json_content = json.loads(content)
         caption = json_content.get('caption', 'Default Caption')
         description = json_content.get('description', 'Default Description')
+
+        print(f"[INFO] Parsed caption: {caption}, description: {description}")
         return caption, description
+
+    except json.JSONDecodeError as e:
+        print(f"[ERROR] JSON decoding failed for .txt file of {filename}: {str(e)}")
+        return "Default Caption", "Default Description"
+
     except Exception as e:
-        print(f"Error downloading {text_filename}: {str(e)}")
+        print(f"[ERROR] Unexpected error for .txt file of {filename}: {str(e)}")
         return "Default Caption", "Default Description"
 
 def list_blobs(bucket_name):
