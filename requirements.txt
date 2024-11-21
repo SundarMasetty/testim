@@ -1,0 +1,4 @@
+Flask
+Werkzeug
+google-cloud-storage
+google-generativeai

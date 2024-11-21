@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Details</title>
+    <style>
+        .image-details-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .image-details img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .image-details figcaption {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        .description {
+            font-size: 1em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="image-details-container">
+        <figure class="image-details">
+            <!-- Display the full image -->
+            <img src="{{ image_url }}" alt="{{ caption }}">
+            <figcaption>{{ caption }}</figcaption>
+        </figure>
+        
+        <!-- Display the description -->
+        <p class="description">{{ description }}</p>
+        
+        <!-- Link to go back to the gallery -->
+        <a href="{{ url_for('gallery') }}">Back to Gallery</a>
+    </div>
+
+</body>
+</html>

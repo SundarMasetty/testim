@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Gallery</title>
+    <style>
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 10px; 
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .caption {
+            font-weight: bold;
+        }
+
+        .description {
+            font-style: italic;
+        }
+
+        .return-link {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+            font-size: 18px;
+            text-decoration: none;
+            color: blue; /* Customize the link color */
+        }
+    </style>
+</head>
+<body>
+    <h1>Uploaded Images</h1>
+
+    <div class="gallery-container">
+        {% for filename, image_bytes in image_data.items() %}
+            <figure>
+                <a href="{{ url_for('image_details', filename=filename) }}">
+                    <img class="gallery-image" src="{{ url_for('serve_image', filename=filename) }}" alt="{{ filename }}" loading="lazy">
+                </a>
+            </figure>
+        {% endfor %}
+    </div>
+
+    <h2>File List</h2>
+    <ul>
+        {% for filename in image_data.keys() %}
+            <li><a href="{{ url_for('serve_image', filename=filename) }}">{{ filename }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <!-- Return to Upload Page Link -->
+    <a href="{{ url_for('upload_file') }}" class="return-link">Return to Upload Page</a>
+</body>
+</html>
